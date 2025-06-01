@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/login_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- App Logo -->
+        <ImageView
+            android:id="@+id/appLogo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/logo_fot_connect"
+            android:contentDescription="App Logo"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Username Label -->
+        <TextView
+            android:id="@+id/usernameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textColor="#956DC5"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"/>
+
+        <!-- Username Input -->
+        <EditText
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:hint="Enter Your Username"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="16sp"
+            android:inputType="text"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Password Label -->
+        <TextView
+            android:id="@+id/passwordLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textColor="#956DC5"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"/>
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:hint="Enter Your Password"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="16sp"
+            android:inputType="textPassword"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Login Button -->
+
+        <!-- Signup Link -->
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_rounded_ripple"
+            android:text="Login"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/signupLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Don’t have an account? Sign up"
+            android:textColor="#B388F2"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="start"/>
+
+    </LinearLayout>
+</ScrollView>
