@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "953650800007",
+    "firebase_url": "https://fot-connect-b90f1-default-rtdb.firebaseio.com",
+    "project_id": "fot-connect-b90f1",
+    "storage_bucket": "fot-connect-b90f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953650800007:android:65368af88d355bcfd91f22",
+        "android_client_info": {
+          "package_name": "lk.cmb.fot_news_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdudaFyuXERjrannPR7L0kjhFEPzEGQ7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
