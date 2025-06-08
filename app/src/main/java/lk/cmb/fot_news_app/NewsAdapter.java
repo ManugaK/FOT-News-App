@@ -1,17 +1,17 @@
 package lk.cmb.fot_news_app;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import lk.cmb.fot_news_app.NewsItem;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.bumptech.glide.Glide;
 
-import lk.cmb.fot_news_app.R;
+import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
@@ -34,7 +34,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         NewsItem item = newsList.get(position);
         holder.newsTitle.setText(item.getTitle());
         holder.newsDate.setText(item.getDate());
-        holder.newsImage.setImageResource(item.getImageResId());
+        // Load image from OneDrive URL using Glide
+        Glide.with(holder.itemView.getContext())
+                .load(item.getImage())
+                .placeholder(R.drawable.news1) // Optional: placeholder image while loading
+                .error(R.drawable.news1)       // Optional: fallback image if load fails
+                .into(holder.newsImage);
     }
 
     @Override

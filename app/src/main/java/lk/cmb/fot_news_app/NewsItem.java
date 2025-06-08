@@ -1,17 +1,23 @@
 package lk.cmb.fot_news_app;
+
 public class NewsItem {
     private String title;
     private String date;
-    private int imageResId; // For local drawable, use int; for URL, use String
+    private String image;
+    private String category; // Add this!
 
-    public NewsItem(String title, String date, int imageResId) {
+    public NewsItem() {}
+
+    public NewsItem(String title, String date, String image, String category) {
         this.title = title;
         this.date = date;
-        this.imageResId = imageResId;
+        this.image = image;
+        this.category = category;
     }
 
-    // Getters
     public String getTitle() { return title; }
     public String getDate() { return date; }
-    public int getImageResId() { return imageResId; }
+    public String getImage() { return image; }
+    public String getCategory() { return category; }
 }
+
