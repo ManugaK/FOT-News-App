@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_sports"
+        android:icon="@drawable/sports_icon"
+        android:title="Sports"
+        />
+    <item
+        android:id="@+id/nav_academic"
+        android:icon="@drawable/academic_icon"
+        android:title="Academic"
+        />
+    <item
+        android:id="@+id/nav_events"
+        android:icon="@drawable/events_icon"
+        android:title="Events"
+        />
+</menu>
