@@ -1,5 +1,7 @@
 package lk.cmb.fot_news_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +39,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         // Load image from OneDrive URL using Glide
         Glide.with(holder.itemView.getContext())
                 .load(item.getImage())
-                .placeholder(R.drawable.news1) // Optional: placeholder image while loading
-                .error(R.drawable.news1)       // Optional: fallback image if load fails
+                .placeholder(R.drawable.news1)
+                .error(R.drawable.news1)
                 .into(holder.newsImage);
+
+        // ---- Card click opens details activity ----
+        holder.itemView.setOnClickListener(v -> {
+            Context context = holder.itemView.getContext();
+            Intent intent = new Intent(context, NewsDetailsActivity.class);
+            intent.putExtra("title", item.getTitle());
+            intent.putExtra("date", item.getDate());
+            intent.putExtra("image", item.getImage());
+            intent.putExtra("description", item.getDescription());
+            intent.putExtra("footer", item.getFooter());
+            intent.putExtra("hashtags", item.getHashtags());
+            intent.putExtra("likes", item.getLikes());
+            intent.putExtra("timestamp", item.getTimestamp());
+            // You can pass more fields if your NewsItem has them!
+            context.startActivity(intent);
+        });
     }
 
     @Override
