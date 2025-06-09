@@ -1,5 +1,7 @@
 package lk.cmb.fot_news_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,12 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private List<NewsItem> newsList;
+    private List<String> newsIdList; // Store Firebase keys
 
-    public NewsAdapter(List<NewsItem> newsList) {
+    // Constructor accepts both news data and ids
+    public NewsAdapter(List<NewsItem> newsList, List<String> newsIdList) {
         this.newsList = newsList;
+        this.newsIdList = newsIdList;
     }
 
     @NonNull
@@ -34,12 +39,30 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         NewsItem item = newsList.get(position);
         holder.newsTitle.setText(item.getTitle());
         holder.newsDate.setText(item.getDate());
-        // Load image from OneDrive URL using Glide
         Glide.with(holder.itemView.getContext())
                 .load(item.getImage())
-                .placeholder(R.drawable.news1) // Optional: placeholder image while loading
-                .error(R.drawable.news1)       // Optional: fallback image if load fails
+                .placeholder(R.drawable.news1)
+                .error(R.drawable.news1)
                 .into(holder.newsImage);
+
+        // Get the newsId for this card
+        String newsId = newsIdList.get(position);
+
+        // Card click opens details activity, passes all fields + newsId
+        holder.itemView.setOnClickListener(v -> {
+            Context context = holder.itemView.getContext();
+            Intent intent = new Intent(context, NewsDetailsActivity.class);
+            intent.putExtra("title", item.getTitle());
+            intent.putExtra("date", item.getDate());
+            intent.putExtra("image", item.getImage());
+            intent.putExtra("description", item.getDescription());
+            intent.putExtra("footer", item.getFooter());
+            intent.putExtra("hashtags", item.getHashtags());
+            intent.putExtra("likes", item.getLikes());
+            intent.putExtra("timestamp", item.getTimestamp());
+            intent.putExtra("newsId", newsId); // << key for DB updates!
+            context.startActivity(intent);
+        });
     }
 
     @Override
