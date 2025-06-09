@@ -33,8 +33,12 @@ public class MainActivity extends AppCompatActivity {
     private List<NewsItem> newsList;     // Filtered list for the RecyclerView
     private List<NewsItem> allNewsList;  // Master list with all news items
 
+    // ---- NEW: Track Firebase keys ----
+    private List<String> newsIdList;     // Filtered IDs
+    private List<String> allNewsIdList;  // All IDs
+
     private String selectedCategory = "sports"; // Default category (use lowercase for consistency)
-    private String currentSearchQuery = "";     // <-- Store current search
+    private String currentSearchQuery = "";     // Store current search
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         newsList = new ArrayList<>();
         allNewsList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(newsList);
+        newsIdList = new ArrayList<>();
+        allNewsIdList = new ArrayList<>();
+        newsAdapter = new NewsAdapter(newsList, newsIdList); // Pass both data & keys!
         newsRecyclerView.setAdapter(newsAdapter);
 
         // 2. Initialize Bottom Navigation
@@ -92,10 +98,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allNewsList.clear();
+                allNewsIdList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     NewsItem newsItem = dataSnapshot.getValue(NewsItem.class);
                     if (newsItem != null) {
                         allNewsList.add(newsItem);
+                        allNewsIdList.add(dataSnapshot.getKey()); // Add Firebase key!
                     }
                 }
                 filterNews();
@@ -111,13 +119,16 @@ public class MainActivity extends AppCompatActivity {
     // 5. Filter by category AND search text
     private void filterNews() {
         newsList.clear();
-        for (NewsItem item : allNewsList) {
+        newsIdList.clear();
+        for (int i = 0; i < allNewsList.size(); i++) {
+            NewsItem item = allNewsList.get(i);
             boolean matchesCategory = item.getCategory() != null &&
                     item.getCategory().equalsIgnoreCase(selectedCategory);
             boolean matchesSearch = item.getTitle() != null &&
                     item.getTitle().toLowerCase().contains(currentSearchQuery.toLowerCase());
             if (matchesCategory && matchesSearch) {
                 newsList.add(item);
+                newsIdList.add(allNewsIdList.get(i));
             }
         }
         newsAdapter.notifyDataSetChanged();

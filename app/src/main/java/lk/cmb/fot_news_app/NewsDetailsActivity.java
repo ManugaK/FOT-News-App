@@ -1,50 +1,124 @@
 package lk.cmb.fot_news_app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class NewsDetailsActivity extends AppCompatActivity {
+
+    private boolean isLiked = false;
+    private int likes = 0;
+    private String newsId = ""; // The node ID in your DB ("news1" etc.)
+
+    private static final String PREFS_NAME = "likes_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_details);
 
+        // Find views
+        ImageView backButton = findViewById(R.id.backButton);
+        ImageView profileButton = findViewById(R.id.profileButton);
+        TextView newsTitle = findViewById(R.id.newsTitle);
+        ImageView newsImage = findViewById(R.id.newsImage);
+        TextView newsDate = findViewById(R.id.newsDate);
+        TextView newsLikes = findViewById(R.id.newsLikes);
+        TextView newsTimeAgo = findViewById(R.id.newsTimeAgo);
+        TextView newsDescription = findViewById(R.id.newsDescription);
+        TextView newsFooter = findViewById(R.id.newsFooter);
+        TextView newsHashtags = findViewById(R.id.newsHashtags);
+        ImageView likeIcon = findViewById(R.id.likeIcon);
+
+        // Handle back button
+        backButton.setOnClickListener(v -> finish());
+
         // Get data from Intent
+        newsId = getIntent().getStringExtra("newsId"); // You'll need to send this with the intent!
         String title = getIntent().getStringExtra("title");
         String date = getIntent().getStringExtra("date");
         String image = getIntent().getStringExtra("image");
         String description = getIntent().getStringExtra("description");
         String footer = getIntent().getStringExtra("footer");
         String hashtags = getIntent().getStringExtra("hashtags");
-        int likes = getIntent().getIntExtra("likes", 0);
-        long timestamp = getIntent().getLongExtra("timestamp", 0);
+        likes = getIntent().getIntExtra("likes", 0);
+        long timestamp = getIntent().getLongExtra("timestamp", System.currentTimeMillis() / 1000);
 
-        // Bind views
-        TextView titleText = findViewById(R.id.detailsTitle);
-        TextView dateText = findViewById(R.id.detailsDate);
-        ImageView imageView = findViewById(R.id.detailsImage);
-        TextView descriptionText = findViewById(R.id.detailsDescription);
-        TextView footerText = findViewById(R.id.detailsFooter);
-        TextView hashtagsText = findViewById(R.id.detailsHashtags);
-        TextView likesText = findViewById(R.id.detailsLikes);
-        TextView timestampText = findViewById(R.id.detailsTimestamp);
+        // Set data
+        newsTitle.setText(title);
+        newsDate.setText(date);
+        newsLikes.setText(String.valueOf(likes));
+        newsFooter.setText(footer);
+        newsHashtags.setText(hashtags);
+        newsTimeAgo.setText(getTimeAgo(timestamp));
+        newsDescription.setText(description);
 
-        // Set data to views
-        titleText.setText(title);
-        dateText.setText(date);
-        descriptionText.setText(description);
-        footerText.setText(footer);
-        hashtagsText.setText(hashtags);
-        likesText.setText("Likes: " + likes);
-        timestampText.setText("Timestamp: " + timestamp);
-
-        Glide.with(this)
-                .load(image)
+        Glide.with(this).load(image)
                 .placeholder(R.drawable.news1)
-                .into(imageView);
+                .error(R.drawable.news1)
+                .into(newsImage);
+
+        // --- LIKE BUTTON TOGGLE LOGIC BELOW ---
+
+        // 1. Check local session if this news is liked
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        isLiked = prefs.getBoolean(newsId, false);
+        updateLikeIcon(likeIcon);
+
+        // 2. Like button click
+        likeIcon.setOnClickListener(v -> {
+            if (!isLiked) {
+                isLiked = true;
+                likes++;
+                updateLikeInFirebase(likes);
+            } else {
+                isLiked = false;
+                likes = Math.max(0, likes - 1);
+                updateLikeInFirebase(likes);
+            }
+            // Save in SharedPreferences
+            prefs.edit().putBoolean(newsId, isLiked).apply();
+            // Update UI
+            newsLikes.setText(String.valueOf(likes));
+            updateLikeIcon(likeIcon);
+        });
+    }
+
+    // Sets the icon for liked/unliked state
+    private void updateLikeIcon(ImageView likeIcon) {
+        if (isLiked) {
+            likeIcon.setImageResource(R.drawable.filledlikeicon); // Use your filled icon
+        } else {
+            likeIcon.setImageResource(R.drawable.likeicon); // Outline icon
+        }
+    }
+
+    // Updates the likes value in Firebase
+    private void updateLikeInFirebase(int newLikes) {
+        if (newsId == null || newsId.isEmpty()) return;
+        DatabaseReference newsRef = FirebaseDatabase.getInstance().getReference("news").child(newsId);
+        newsRef.child("likes").setValue(newLikes);
+    }
+
+    // Utility: Convert Unix timestamp to "12m" style
+    private String getTimeAgo(long timestamp) {
+        if (timestamp < 1000000000000L) {
+            timestamp = timestamp * 1000;
+        }
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+
+        if (diff < 60 * 1000) return "just now";
+        else if (diff < 60 * 60 * 1000) return (diff / (60 * 1000)) + "m";
+        else if (diff < 24 * 60 * 60 * 1000) return (diff / (60 * 60 * 1000)) + "h";
+        else return (diff / (24 * 60 * 60 * 1000)) + "d";
     }
 }

@@ -18,9 +18,12 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private List<NewsItem> newsList;
+    private List<String> newsIdList; // Store Firebase keys
 
-    public NewsAdapter(List<NewsItem> newsList) {
+    // Constructor accepts both news data and ids
+    public NewsAdapter(List<NewsItem> newsList, List<String> newsIdList) {
         this.newsList = newsList;
+        this.newsIdList = newsIdList;
     }
 
     @NonNull
@@ -36,14 +39,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         NewsItem item = newsList.get(position);
         holder.newsTitle.setText(item.getTitle());
         holder.newsDate.setText(item.getDate());
-        // Load image from OneDrive URL using Glide
         Glide.with(holder.itemView.getContext())
                 .load(item.getImage())
                 .placeholder(R.drawable.news1)
                 .error(R.drawable.news1)
                 .into(holder.newsImage);
 
-        // ---- Card click opens details activity ----
+        // Get the newsId for this card
+        String newsId = newsIdList.get(position);
+
+        // Card click opens details activity, passes all fields + newsId
         holder.itemView.setOnClickListener(v -> {
             Context context = holder.itemView.getContext();
             Intent intent = new Intent(context, NewsDetailsActivity.class);
@@ -55,7 +60,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             intent.putExtra("hashtags", item.getHashtags());
             intent.putExtra("likes", item.getLikes());
             intent.putExtra("timestamp", item.getTimestamp());
-            // You can pass more fields if your NewsItem has them!
+            intent.putExtra("newsId", newsId); // << key for DB updates!
             context.startActivity(intent);
         });
     }
