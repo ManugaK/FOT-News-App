@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 import android.view.MotionEvent;
 import android.content.Intent;
+import android.widget.ImageButton; // <-- Add this if info button is an ImageButton
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private List<NewsItem> newsList;     // Filtered list for the RecyclerView
     private List<NewsItem> allNewsList;  // Master list with all news items
 
-    // ---- NEW: Track Firebase keys ----
+    // ---- Track Firebase keys ----
     private List<String> newsIdList;     // Filtered IDs
     private List<String> allNewsIdList;  // All IDs
 
@@ -52,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
         }
         TextView greetingText = findViewById(R.id.greetingText);
         greetingText.setText("Hi, " + username);
+
+        // --- Handle Info Button to open Developer Info Activity ---
+        View infoButton = findViewById(R.id.infoButton);
+        if (infoButton != null) {
+            infoButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, DeveloperInfoActivity.class);
+                startActivity(intent);
+            });
+        }
 
         // 1. Initialize RecyclerView
         newsRecyclerView = findViewById(R.id.newsRecyclerView);
