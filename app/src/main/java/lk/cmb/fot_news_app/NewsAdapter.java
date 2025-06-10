@@ -19,11 +19,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     private List<NewsItem> newsList;
     private List<String> newsIdList; // Store Firebase keys
+    private String username; // <-- NEW: Store logged-in username
 
-    // Constructor accepts both news data and ids
-    public NewsAdapter(List<NewsItem> newsList, List<String> newsIdList) {
+    // Updated constructor accepts username
+    public NewsAdapter(List<NewsItem> newsList, List<String> newsIdList, String username) {
         this.newsList = newsList;
         this.newsIdList = newsIdList;
+        this.username = username;
     }
 
     @NonNull
@@ -48,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         // Get the newsId for this card
         String newsId = newsIdList.get(position);
 
-        // Card click opens details activity, passes all fields + newsId
+        // Card click opens details activity, passes all fields + newsId + username
         holder.itemView.setOnClickListener(v -> {
             Context context = holder.itemView.getContext();
             Intent intent = new Intent(context, NewsDetailsActivity.class);
@@ -61,6 +63,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             intent.putExtra("likes", item.getLikes());
             intent.putExtra("timestamp", item.getTimestamp());
             intent.putExtra("newsId", newsId); // << key for DB updates!
+            intent.putExtra("username", username); // <-- NEW: Pass logged-in user!
             context.startActivity(intent);
         });
     }

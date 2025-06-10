@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 import android.view.MotionEvent;
 import android.content.Intent;
-import android.widget.ImageButton; // <-- Add this if info button is an ImageButton
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +38,11 @@ public class MainActivity extends AppCompatActivity {
     private List<String> newsIdList;     // Filtered IDs
     private List<String> allNewsIdList;  // All IDs
 
-    private String selectedCategory = "sports"; // Default category (use lowercase for consistency)
+    private String selectedCategory = "sports"; // Default category
     private String currentSearchQuery = "";     // Store current search
+
+    // Keep username as a field so you can pass it everywhere
+    private String username = "User";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // --- GET THE USERNAME from Intent and show greeting ---
-        String username = getIntent().getStringExtra("username");
-        if (username == null || username.isEmpty()) {
-            username = "User"; // fallback if not set
-        }
+        final String usernameIntent = getIntent().getStringExtra("username");
+        username = (usernameIntent == null || usernameIntent.isEmpty()) ? "User" : usernameIntent;
+
         TextView greetingText = findViewById(R.id.greetingText);
         greetingText.setText("Hi, " + username);
 
@@ -63,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        // --- Handle Profile Button to navigate to Profile Activity ---
+        ImageButton profileButton = findViewById(R.id.profileButton); // Assuming this is an ImageButton for profile
+        if (profileButton != null) {
+            profileButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("username", username);  // Pass username to ProfileActivity
+                startActivity(intent);
+            });
+        }
+
         // 1. Initialize RecyclerView
         newsRecyclerView = findViewById(R.id.newsRecyclerView);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         allNewsList = new ArrayList<>();
         newsIdList = new ArrayList<>();
         allNewsIdList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(newsList, newsIdList); // Pass both data & keys!
+        newsAdapter = new NewsAdapter(newsList, newsIdList, username); // <--- Pass username!
         newsRecyclerView.setAdapter(newsAdapter);
 
         // 2. Initialize Bottom Navigation

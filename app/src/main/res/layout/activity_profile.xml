@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/login_background"
+    android:padding="24dp">
+
+    <!-- Profile Image Circle -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/noprofilepic"
+        android:layout_marginTop="50dp"
+        android:contentDescription="Profile picture"
+        android:layout_gravity="center"/>
+
+    <!-- Username Section with Static and Dynamic Text -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:gravity="start"
+        android:text="USER INFORMATION"
+        android:textColor="#956DC5"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginTop="30dp">
+
+        <!-- Static Text "Username :" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username :"
+            android:textColor="#956DC5"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <!-- Dynamic Username (Fetched from Firebase) -->
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manuga"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- E-mail Section with Static and Dynamic Text -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginTop="20dp">
+
+        <!-- Static Text "E-mail :" -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E-mail :"
+            android:textColor="#956DC5"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <!-- Dynamic E-mail (Fetched from Firebase) -->
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2022t01542@stu.cmb.ac.lk"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Edit Info Button -->
+    <Button
+        android:id="@+id/edit_info_btn"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:text="Edit Info"
+        android:background="@drawable/button_rounded_ripple"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="72dp"/>
+
+    <!-- Sign Out Button -->
+    <Button
+        android:id="@+id/sign_out_btn"
+        android:layout_width="185dp"
+        android:layout_height="48dp"
+        android:text="Sign-out"
+        android:textStyle="bold"
+        android:backgroundTint="#E53935"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="210dp"/>
+
+</LinearLayout>
