@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".NewsDetailsActivity" android:exported="true"/>
         <activity android:name=".DeveloperInfoActivity"/>
+        <activity android:name=".ProfileActivity"/>
     </application>
 
 </manifest>

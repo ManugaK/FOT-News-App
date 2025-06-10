@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private boolean isLiked = false;
     private int likes = 0;
     private String newsId = ""; // The node ID in your DB ("news1" etc.)
+    private String username = ""; // <-- NEW: Store username
 
     private static final String PREFS_NAME = "likes_prefs";
 
@@ -41,7 +43,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         // Handle back button
         backButton.setOnClickListener(v -> finish());
 
-        // Get data from Intent
+        // --- Get data from Intent ---
         newsId = getIntent().getStringExtra("newsId"); // You'll need to send this with the intent!
         String title = getIntent().getStringExtra("title");
         String date = getIntent().getStringExtra("date");
@@ -51,6 +53,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         String hashtags = getIntent().getStringExtra("hashtags");
         likes = getIntent().getIntExtra("likes", 0);
         long timestamp = getIntent().getLongExtra("timestamp", System.currentTimeMillis() / 1000);
+        username = getIntent().getStringExtra("username"); // <-- NEW: Get logged-in username!
 
         // Set data
         newsTitle.setText(title);
@@ -89,6 +92,13 @@ public class NewsDetailsActivity extends AppCompatActivity {
             // Update UI
             newsLikes.setText(String.valueOf(likes));
             updateLikeIcon(likeIcon);
+        });
+
+        // --- PROFILE BUTTON: navigate to ProfileActivity with username ---
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(NewsDetailsActivity.this, ProfileActivity.class);
+            intent.putExtra("username", username); // <-- Pass username!
+            startActivity(intent);
         });
     }
 
