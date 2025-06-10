@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/developerHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Developer Information"
+        android:textColor="#B3A3F7"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp"/>
+
+    <!-- Circular Profile Photo -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/developerPhoto"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/developer_photo"
+    app:layout_constraintTop_toBottomOf="@id/developerHeader"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="50dp"/>
+
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/devNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name :"
+        android:textColor="#956DC5"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/developerPhoto"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="72dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Name Value -->
+    <TextView
+        android:id="@+id/devName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="M.M.D Karunathilake"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/devNameLabel"
+        app:layout_constraintStart_toEndOf="@id/devNameLabel"
+        android:layout_marginStart="4dp"/>
+
+    <!-- Student Number Label -->
+    <TextView
+        android:id="@+id/devStudentNoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student Number :"
+        android:textColor="#956DC5"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/devNameLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Student Number Value -->
+    <TextView
+        android:id="@+id/devStudentNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2022T01542"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/devStudentNoLabel"
+        app:layout_constraintStart_toEndOf="@id/devStudentNoLabel"
+        android:layout_marginStart="4dp"/>
+
+    <!-- Personal Statement Label -->
+    <TextView
+        android:id="@+id/devStatementLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Personal statement :"
+        android:textColor="#956DC5"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/devStudentNoLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Personal Statement Value (on the same line!) -->
+    <TextView
+        android:id="@+id/devStatement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Undergraduate UOC | FOT"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/devStatementLabel"
+        app:layout_constraintStart_toEndOf="@id/devStatementLabel"
+        android:layout_marginStart="4dp"/>
+
+    <!-- Release Version Label -->
+    <TextView
+        android:id="@+id/devVersionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Release Version :"
+        android:textColor="#956DC5"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/devStatementLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Release Version Value -->
+    <TextView
+        android:id="@+id/devVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="v1.0.0"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="@id/devVersionLabel"
+        app:layout_constraintStart_toEndOf="@id/devVersionLabel"
+        android:layout_marginStart="4dp"/>
+
+    <!-- Exit Button -->
+    <Button
+        android:id="@+id/exitButton"
+        android:layout_width="185dp"
+        android:layout_height="48dp"
+        android:text="Exit"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:backgroundTint="#FF4242"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="56dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        app:cornerRadius="30dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
