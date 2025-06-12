@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:text="Don’t have an account? Sign up"
             android:textColor="#B388F2"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:clickable="true"
             android:focusable="true"
             android:gravity="start"/>

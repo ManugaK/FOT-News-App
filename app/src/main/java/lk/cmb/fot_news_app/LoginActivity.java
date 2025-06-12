@@ -72,9 +72,15 @@ public class LoginActivity extends AppCompatActivity {
                     if (storedPassword != null && storedPassword.equals(passwordInput)) {
                         Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                        // Pass the username to MainActivity
+                        // --- SAVE USERNAME in SharedPreferences ---
+                        getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("username", username)
+                                .apply();
+
+                        // Optional: pass username via Intent (but MainActivity now always uses SharedPreferences)
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("username", username); // <-- pass username here!
+                        intent.putExtra("username", username);
                         startActivity(intent);
                         finish();
                     } else {

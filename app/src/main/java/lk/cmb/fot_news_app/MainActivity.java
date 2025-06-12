@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.MotionEvent;
 import android.content.Intent;
 import android.widget.ImageButton;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,19 +42,20 @@ public class MainActivity extends AppCompatActivity {
     private String selectedCategory = "sports"; // Default category
     private String currentSearchQuery = "";     // Store current search
 
-    // Keep username as a field so you can pass it everywhere
     private String username = "User";
+
+    private TextView greetingText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // --- GET THE USERNAME from Intent and show greeting ---
-        final String usernameIntent = getIntent().getStringExtra("username");
-        username = (usernameIntent == null || usernameIntent.isEmpty()) ? "User" : usernameIntent;
+        // --- GET THE USERNAME from SharedPreferences (not just Intent) ---
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        username = prefs.getString("username", "User");
 
-        TextView greetingText = findViewById(R.id.greetingText);
+        greetingText = findViewById(R.id.greetingText);
         greetingText.setText("Hi, " + username);
 
         // --- Handle Info Button to open Developer Info Activity ---
@@ -66,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // --- Handle Profile Button to navigate to Profile Activity ---
-        ImageButton profileButton = findViewById(R.id.profileButton); // Assuming this is an ImageButton for profile
+        ImageButton profileButton = findViewById(R.id.profileButton);
         if (profileButton != null) {
             profileButton.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                intent.putExtra("username", username);  // Pass username to ProfileActivity
+                // No need to pass username; ProfileActivity will read from SharedPreferences
                 startActivity(intent);
             });
         }
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         allNewsList = new ArrayList<>();
         newsIdList = new ArrayList<>();
         allNewsIdList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(newsList, newsIdList, username); // <--- Pass username!
+        newsAdapter = new NewsAdapter(newsList, newsIdList, username);
         newsRecyclerView.setAdapter(newsAdapter);
 
         // 2. Initialize Bottom Navigation
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     NewsItem newsItem = dataSnapshot.getValue(NewsItem.class);
                     if (newsItem != null) {
                         allNewsList.add(newsItem);
-                        allNewsIdList.add(dataSnapshot.getKey()); // Add Firebase key!
+                        allNewsIdList.add(dataSnapshot.getKey());
                     }
                 }
                 filterNews();
@@ -136,6 +138,22 @@ public class MainActivity extends AppCompatActivity {
                 // Optionally show an error (e.g., Toast)
             }
         });
+    }
+
+    // Refresh username greeting every time MainActivity resumes (after returning from ProfileActivity)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        username = prefs.getString("username", "User");
+        if (greetingText != null) {
+            greetingText.setText("Hi, " + username);
+        }
+        // Also, update NewsAdapter's username if needed (if you use username in adapter)
+        if (newsAdapter != null) {
+            newsAdapter.setUsername(username);
+            newsAdapter.notifyDataSetChanged();
+        }
     }
 
     // 5. Filter by category AND search text
@@ -166,9 +184,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // --- Add these methods below ---
-
-    // Hide keyboard and clear focus if needed
     private void hideKeyboardAndClearFocus() {
         View view = this.getCurrentFocus();
         if (view != null) {

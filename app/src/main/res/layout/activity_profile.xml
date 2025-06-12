@@ -9,18 +9,42 @@
     android:background="@drawable/login_background"
     android:padding="24dp">
 
+    <!-- Top bar: Back button and (optional) profile icon -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/backicon"
+            android:contentDescription="Back"
+            android:layout_marginEnd="12dp"/>
+
+        <!-- (Optional) Spacer for right alignment if needed -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
     <!-- Profile Image Circle -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/noprofilepic"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
         android:contentDescription="Profile picture"
         android:layout_gravity="center"/>
 
     <!-- Username Section with Static and Dynamic Text -->
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,9 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Manuga"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:layout_marginStart="8dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
     <!-- E-mail Section with Static and Dynamic Text -->
@@ -81,9 +105,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2022t01542@stu.cmb.ac.lk"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:layout_marginStart="8dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
     <!-- Edit Info Button -->

@@ -2,6 +2,7 @@ package lk.cmb.fot_news_app;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -10,7 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.net.Uri;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -28,10 +33,21 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView profileImageView;
     private String userId; // username
 
+    private Uri selectedImageUri = null; // Holds the locally chosen image
+
+    // New: Image picker launcher
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // --- Back button logic ---
+        ImageView backButton = findViewById(R.id.backButton);
+        if (backButton != null) {
+            backButton.setOnClickListener(v -> finish());
+        }
 
         // Initialize views
         usernameTextView = findViewById(R.id.username);
@@ -40,8 +56,29 @@ public class ProfileActivity extends AppCompatActivity {
         signOutButton = findViewById(R.id.sign_out_btn);
         profileImageView = findViewById(R.id.profile_image);
 
-        // Get username from Intent
-        userId = getIntent().getStringExtra("username");
+        // Image picker logic
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            selectedImageUri = imageUri;
+                            profileImageView.setImageURI(imageUri);
+                        }
+                    }
+                });
+
+        // Handle image click
+        profileImageView.setOnClickListener(v -> openImagePicker());
+
+        // Get username from SharedPreferences (preferred way!)
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        userId = prefs.getString("username", null);
+        if (userId == null) {
+            // fallback to Intent if needed (legacy)
+            userId = getIntent().getStringExtra("username");
+        }
         fetchUserData(userId);
 
         // Edit Info button click listener
@@ -54,6 +91,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Sign out button click listener
         signOutButton.setOnClickListener(v -> signOut());
+    }
+
+    // Method to open image picker
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        pickImageLauncher.launch(intent);
     }
 
     private void fetchUserData(String userId) {
@@ -72,16 +116,19 @@ public class ProfileActivity extends AppCompatActivity {
                     String email = dataSnapshot.child("email").getValue(String.class);
                     emailTextView.setText(email);
 
-                    String imageUrl = dataSnapshot.child("image").getValue(String.class);
-                    if (imageUrl != null && !imageUrl.isEmpty()) {
-                        Glide.with(ProfileActivity.this)
-                                .load(imageUrl)
-                                .placeholder(R.drawable.noprofilepic)
-                                .error(R.drawable.noprofilepic)
-                                .into(profileImageView);
-                    } else {
-                        profileImageView.setImageResource(R.drawable.noprofilepic);
-                    }
+                    // Only load from database if user has not picked an image this session
+                    if (selectedImageUri == null) {
+                        String imageUrl = dataSnapshot.child("image").getValue(String.class);
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Glide.with(ProfileActivity.this)
+                                    .load(imageUrl)
+                                    .placeholder(R.drawable.noprofilepic)
+                                    .error(R.drawable.noprofilepic)
+                                    .into(profileImageView);
+                        } else {
+                            profileImageView.setImageResource(R.drawable.noprofilepic);
+                        }
+                    } // else: show picked image
                 } else {
                     Toast.makeText(ProfileActivity.this, "No data found for the user", Toast.LENGTH_SHORT).show();
                 }
@@ -198,9 +245,13 @@ public class ProfileActivity extends AppCompatActivity {
                                                     usernameTextView.setText(newUsername);
                                                     emailTextView.setText(newEmail);
 
-                                                    dialog.dismiss();
+                                                    // ------ Save new username in SharedPreferences ------
+                                                    getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                                                            .edit()
+                                                            .putString("username", newUsername)
+                                                            .apply();
 
-                                                    // You may want to update any other references to the username here!
+                                                    dialog.dismiss();
                                                 })
                                                 .addOnFailureListener(e -> {
                                                     Toast.makeText(ProfileActivity.this, "Failed to remove old user: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -233,9 +284,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnYes.setOnClickListener(v -> {
             Toast.makeText(this, "Signed Out", Toast.LENGTH_SHORT).show();
-             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-             startActivity(intent);
-             finish();
+            // Optional: clear SharedPreferences username on sign out
+            getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                    .edit()
+                    .remove("username")
+                    .apply();
+
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
             dialog.dismiss();
         });
 
